@@ -19,18 +19,18 @@ namespace ApiLucasVieiraVicente
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
-            _stringConnection = Configuration["Sqlite:SqliteConnectionString"];
+            Configuration = configuration;            
         }
-
-        private readonly string _stringConnection;
+        
         public IConfiguration Configuration { get; }        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string stringConnection = Configuration["Sqlite:SqliteConnectionString"];
+
             services.AddDbContext<GameContext>(options =>
-                options.UseSqlite(_stringConnection)
+                options.UseSqlite(stringConnection)
             );
 
             services.AddControllers();
