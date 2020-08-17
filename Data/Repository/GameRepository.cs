@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ApiLucasVieiraVicente.Data.Repository
 {
-    public class GameRepository : BaseRepository<Game>
+    public class GameRepository : BaseRepository<Game>, IGameRepository
     {
         public GameRepository(GameContext context) : base(context)
         {

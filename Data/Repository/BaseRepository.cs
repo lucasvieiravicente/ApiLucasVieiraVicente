@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ApiLucasVieiraVicente.Data.Repository
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class
+    public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
         internal GameContext Context;
         internal DbSet<T> DbSet;
@@ -21,9 +21,9 @@ namespace ApiLucasVieiraVicente.Data.Repository
             DbSet = Context.Set<T>();
         }
 
-        public T GetById(Guid id) => DbSet.Find(id);
+        public T GetById(Guid id) => DbSet.Where(w => w.Id == id).FirstOrDefault();
 
-        public IEnumerable<T> GetAll() => DbSet;
+        public IEnumerable<T> GetAll() => DbSet.Where(w => !w.IsDeleted);
 
         public void Add(T entity) => DbSet.Add(entity);
 

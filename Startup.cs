@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiLucasVieiraVicente.Data.Context;
+using ApiLucasVieiraVicente.Data.Repository;
+using ApiLucasVieiraVicente.Data.Repository.Interfaces;
+using ApiLucasVieiraVicente.Data.UoW;
+using ApiLucasVieiraVicente.Data.UoW.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +36,10 @@ namespace ApiLucasVieiraVicente
             services.AddDbContext<GameContext>(options =>
                 options.UseSqlite(stringConnection)
             );
+
+            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<IUoW, UoW>();
 
             services.AddControllers();
         }

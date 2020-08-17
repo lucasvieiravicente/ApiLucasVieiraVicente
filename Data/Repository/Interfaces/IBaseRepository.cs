@@ -1,11 +1,12 @@
-﻿using System;
+﻿using ApiLucasVieiraVicente.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiLucasVieiraVicente.Data.Repository.Interfaces
 {
-    public interface IBaseRepository<T> where T: class
+    public interface IBaseRepository<T> where T: BaseEntity
     {
         T GetById(Guid id);
         IEnumerable<T> GetAll();

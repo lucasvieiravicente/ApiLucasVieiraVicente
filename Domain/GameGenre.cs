@@ -8,6 +8,8 @@ namespace ApiLucasVieiraVicente.Domain
 {
     public enum GameGenre
     {
+        [Display(Name = "Não selecionado")]
+        NotValid,
         [Display(Name = "Ação")]
         Action,
         [Display(Name = "Aventura")]

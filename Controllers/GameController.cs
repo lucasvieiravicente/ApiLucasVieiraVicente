@@ -2,85 +2,113 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiLucasVieiraVicente.Data.Repository.Interfaces;
+using ApiLucasVieiraVicente.Data.UoW.Interfaces;
+using ApiLucasVieiraVicente.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiLucasVieiraVicente.Controllers
 {
+    [Route("[controller]")]
     public class GameController : Controller
     {
+        private readonly IUoW _uow;
+        public GameController(IUoW uow) { _uow = uow; }
+
         // GET: GameController
-        public ActionResult Index()
+        [HttpGet]        
+        public ActionResult GetAll()
         {
-            return View();
+            var values = _uow.GameRepository.GetAll();
+            return Ok(values);
         }
 
-        // GET: GameController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        [Route("ById/{id}")]
+        public ActionResult GetById(Guid id)
         {
-            return View();
+            var game = _uow.GameRepository.GetById(id);
+            _uow.Dispose();
+
+            if (game == null)
+                return BadRequest("Nenhum jogo encontrado");
+            else
+                return Ok(game);
         }
 
-        // GET: GameController/Create
-        public ActionResult Create()
+        [HttpGet]
+        [Route("ByName/{name}")]
+        public ActionResult GetByName(string name)
         {
-            return View();
+            var game = _uow.GameRepository.GetByName(name);
+            _uow.Dispose();
+
+            if (game == null)
+                return BadRequest("Nenhum jogo encontrado");
+            else
+                return Ok(game);
         }
 
         // POST: GameController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Game game)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!game.IsValid())
+                    return BadRequest("Verifique os campos");
+
+                _uow.GameRepository.Add(game);
+                _uow.Commit();
+
+                return Ok("Valores registrados com sucesso");
             }
             catch
             {
-                return View();
+                return BadRequest("Houve um erro na requisição");
             }
         }
-
-        // GET: GameController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: GameController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        
+        [HttpPut]        
+        public ActionResult Edit(Game game)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!game.IsValid())
+                    return BadRequest("Verifique os campos");
+
+                _uow.GameRepository.Update(game);
+                _uow.Commit();
+
+                return Ok("Atualização realizada com sucesso!");
             }
             catch
             {
-                return View();
+                return BadRequest("Houve um problema na requisição");
             }
         }
 
-        // GET: GameController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: GameController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpDelete]
+        [Route("{id}")]
+        public ActionResult Delete(Guid id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var game = _uow.GameRepository.GetById(id);
+
+                if (game == null)
+                    return BadRequest("Nenhum jogo foi encontrado");
+
+                _uow.GameRepository.Remove(game);
+                _uow.Commit();
+
+                return Ok("Remoção concluida com sucesso");
             }
             catch
             {
-                return View();
+                return BadRequest("Houve falha na requisição");
             }
         }
     }
