@@ -16,9 +16,9 @@ namespace ApiLucasVieiraVicente.Data.UoW
         private GameContext _context;
         private GameRepository _gameRepository = null;
 
-        public UoW()
+        public UoW(GameContext context)
         {
-            _context = new GameContext(new DbContextOptions<GameContext>());
+            _context = context;
         }
 
         public IGameRepository GameRepository

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiLucasVieiraVicente.Controllers
 {
+    [ApiController]
     [Route("[controller]")]
     public class GameController : Controller
     {
@@ -51,9 +52,8 @@ namespace ApiLucasVieiraVicente.Controllers
         }
 
         // POST: GameController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Game game)
+        [HttpPost]        
+        public ActionResult Create([FromBody]Game game)
         {
             try
             {
